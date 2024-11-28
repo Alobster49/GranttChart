@@ -1,0 +1,97 @@
+/* Timeline.css */
+
+.timeline-container {
+    max-width: 100%;
+    padding: 32px;
+    font-family: "Inter", sans-serif;
+    background-color: #ffffff;
+  }
+  
+  .timeline-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+  
+  .view-mode-selector {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .view-mode-select {
+    appearance: none;
+    border: none;
+    background-color: #f7f7f7;
+    padding: 8px 32px 8px 16px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #444;
+  }
+  
+  .view-mode-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(60, 64, 67, 0.15);
+  }
+  
+  .timeline-chart {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+  }
+  
+  .custom-tooltip {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #333;
+  }
+  
+  .task-list-header {
+    display: flex;
+    background-color: #fafafa;
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .task-list-header-item {
+    flex: 1;
+    font-weight: 600;
+    color: #555;
+  }
+  
+  .task-list-table {
+    background-color: #ffffff;
+  }
+  
+  .task-list-row {
+    display: flex;
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .task-list-cell {
+    flex: 1;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  /* Gantt chart custom styles */
+  .gantt-table {
+    background-color: #ffffff !important;
+  }
+  
+  .gantt-header {
+    background-color: #fafafa !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+  }
+  
+  .gantt-task {
+    border-radius: 4px !important;
+  }
+  
+  .gantt-task-progress {
+    opacity: 0.6 !important;
+  }
+  
