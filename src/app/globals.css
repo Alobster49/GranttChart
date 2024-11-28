@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '../Example/index.css'; 
 *,
 *::before
 *::after{

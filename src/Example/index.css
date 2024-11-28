@@ -1,3 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
 .Wrapper {
   margin-bottom: 2rem;
 }

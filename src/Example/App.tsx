@@ -5,6 +5,7 @@ import { Task, ViewMode, Gantt } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import { getStartEndDateForProject, initTasks } from "./helper";
 import { ViewSwitcher } from "./components/view-switcher";
+import './index.css';
 
 // Init
 const App = () => {
@@ -140,9 +141,10 @@ const App = () => {
   return (
     <div className="Wrapper">
       <ViewSwitcher
-        onViewModeChange={viewMode => setView(viewMode)}
+        onViewModeChange={(viewMode) => setView(viewMode)}
         onViewListChange={setIsChecked}
         isChecked={isChecked}
+        currentViewMode={view}
       />
       <h3>Gantt With Unlimited Height</h3>
       <Gantt
