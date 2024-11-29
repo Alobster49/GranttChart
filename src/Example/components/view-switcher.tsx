@@ -1,5 +1,8 @@
 import React from "react";
 import { ViewMode } from "gantt-task-react";
+// In view-switcher.tsx
+import '../index.css';
+
 
 type ViewSwitcherProps = {
   isChecked: boolean;

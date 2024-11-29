@@ -15,8 +15,89 @@ body,
 .app{
   height: 100%;
   width: 100%;
-  @apply text-sm;
-  @apply bg-gray-500;
-  @apply text-gray-900;
+  @apply text-lg;
+  @apply bg-blue-400;
+  @apply text-black;
+
+  .Wrapper {
+    margin-bottom: 2rem;
+  }
+  .ViewContainer {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .Button {
+    background-color: #e7e7e7;
+    color: blue;
+    border: none;
+    padding: 7px 24px; /* Increased padding */
+    text-decoration: none;
+    margin: 4px 8px;   /* Increased margin */
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    /* Optional: Add letter or word spacing */
+    /* letter-spacing: 1px; */
+    /* word-spacing: 4px; */
+  }
+  .Switch {
+    margin: 4px 15px;
+    font-size: 14px;
+    font-family: "Arial, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .Switch_Toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    margin-right: 5px;
+  }
+  
+  .Switch_Toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .Slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+  }
+  
+  .Slider:before {
+    position: absolute;
+    content: "";
+    height: 21px;
+    width: 21px;
+    left: 6px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+  }
+  
+  input:checked + .Slider {
+    background-color: #2196f3;
+  }
+  
+  input:focus + .Slider {
+    box-shadow: 0 0 1px #2196f3;
+  }
+  
+  input:checked + .Slider:before {
+    transform: translateX(26px);
+  }
+  
 }
 
