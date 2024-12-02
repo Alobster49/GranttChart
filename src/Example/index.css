@@ -4,27 +4,91 @@
 @tailwind utilities;
 
 @layer components {
-  .Button {
-    @apply bg-blue-500 text-white px-4 py-2 m-1 border rounded focus:outline-none transition-colors duration-200;
-  }
+/* index.css or view-switcher.css */
 
-  .Button:hover {
-    @apply bg-blue-600;
-  }
+.ViewContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
 
-  .ActiveButton {
-    @apply bg-blue-700 border-blue-700;
-  }
+.Button {
+  padding: 6px 12px;
+  margin: 2px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  border-radius: 4px;
+}
 
-  .ActiveButton:hover {
-    @apply bg-blue-800;
-  }
+.Button:hover {
+  background-color: #d5d5d5;
+}
 
-  .ViewContainer {
-    @apply flex flex-wrap items-center;
-  }
+.Button:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
 
-  .Switch {
-    @apply flex items-center ml-4;
-  }
+.ActiveButton {
+  background-color: #757de8;
+  color: white;
+}
+
+.Switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+  margin-left: 10px;
+}
+
+.Switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.Slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.Slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .Slider {
+  background-color: #757de8;
+}
+
+input:focus + .Slider {
+  box-shadow: 0 0 1px #757de8;
+}
+
+input:checked + .Slider:before {
+  transform: translateX(16px);
+}
+
+.Slider.round {
+  border-radius: 24px;
+}
+
+.Slider.round:before {
+  border-radius: 50%;
+}
 }

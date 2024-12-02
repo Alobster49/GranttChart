@@ -1,90 +1,96 @@
+// components/view-switcher.tsx
+
 import React from "react";
 import { ViewMode } from "gantt-task-react";
-// In view-switcher.tsx
-import '../index.css';
 
-
-type ViewSwitcherProps = {
+interface ViewSwitcherProps {
+  onViewModeChange: (viewMode: ViewMode) => void;
+  onViewListChange: (isChecked: boolean) => void;
   isChecked: boolean;
   currentViewMode: ViewMode;
-  onViewListChange: (isChecked: boolean) => void;
-  onViewModeChange: (viewMode: ViewMode) => void;
-};
+  onUndo: () => void;
+  onRedo: () => void;
+  onExpandAll: () => void;
+  onCollapseAll: () => void;
+  undoDisabled: boolean;
+  redoDisabled: boolean;
+}
 
 export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
   onViewModeChange,
   onViewListChange,
   isChecked,
   currentViewMode,
+  onUndo,
+  onRedo,
+  onExpandAll,
+  onCollapseAll,
+  undoDisabled,
+  redoDisabled,
 }) => {
-  const getButtonClasses = (viewMode: ViewMode) => {
-    const baseClasses =
-      "px-4 py-2 m-1 border rounded focus:outline-none transition-colors duration-200";
-    const activeClasses =
-      "bg-blue-500 text-white border-blue-500 hover:bg-blue-600";
-    const inactiveClasses =
-      "bg-gray-200 text-black border-gray-300 hover:bg-gray-300";
-
-    return viewMode === currentViewMode
-      ? `${baseClasses} ${activeClasses}`
-      : `${baseClasses} ${inactiveClasses}`;
+  const getButtonClass = (viewMode: ViewMode) => {
+    return viewMode === currentViewMode ? "Button ActiveButton" : "Button";
   };
 
   return (
-    <div className="flex flex-wrap items-center">
+    <div className="ViewContainer">
+      {/* View Mode Buttons */}
       <button
-        className={getButtonClasses(ViewMode.Hour)}
+        className={getButtonClass(ViewMode.Hour)}
         onClick={() => onViewModeChange(ViewMode.Hour)}
       >
         Hour
       </button>
       <button
-        className={getButtonClasses(ViewMode.QuarterDay)}
-        onClick={() => onViewModeChange(ViewMode.QuarterDay)}
-      >
-        Quarter of Day
-      </button>
-      <button
-        className={getButtonClasses(ViewMode.HalfDay)}
-        onClick={() => onViewModeChange(ViewMode.HalfDay)}
-      >
-        Half of Day
-      </button>
-      <button
-        className={getButtonClasses(ViewMode.Day)}
+        className={getButtonClass(ViewMode.Day)}
         onClick={() => onViewModeChange(ViewMode.Day)}
       >
         Day
       </button>
       <button
-        className={getButtonClasses(ViewMode.Week)}
+        className={getButtonClass(ViewMode.Week)}
         onClick={() => onViewModeChange(ViewMode.Week)}
       >
         Week
       </button>
       <button
-        className={getButtonClasses(ViewMode.Month)}
+        className={getButtonClass(ViewMode.Month)}
         onClick={() => onViewModeChange(ViewMode.Month)}
       >
         Month
       </button>
       <button
-        className={getButtonClasses(ViewMode.Year)}
+        className={getButtonClass(ViewMode.Year)}
         onClick={() => onViewModeChange(ViewMode.Year)}
       >
         Year
       </button>
-      <div className="flex items-center ml-4">
-        <label className="flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            className="form-checkbox h-5 w-5"
-            defaultChecked={isChecked}
-            onClick={() => onViewListChange(!isChecked)}
-          />
-          <span className="ml-2 text-sm">Show Task List</span>
-        </label>
-      </div>
+
+      {/* Undo and Redo Buttons */}
+      <button className="Button" onClick={onUndo} disabled={undoDisabled}>
+        Undo
+      </button>
+      <button className="Button" onClick={onRedo} disabled={redoDisabled}>
+        Redo
+      </button>
+
+      {/* Expand All and Collapse All Buttons */}
+      <button className="Button" onClick={onExpandAll}>
+        Expand All
+      </button>
+      <button className="Button" onClick={onCollapseAll}>
+        Collapse All
+      </button>
+
+      {/* Toggle Task List */}
+      <label className="Switch">
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={(e) => onViewListChange(e.target.checked)}
+        />
+        <span className="Slider" />
+      </label>
     </div>
   );
 };
