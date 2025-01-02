@@ -1,5 +1,3 @@
-// components/view-switcher.tsx
-
 import React from "react";
 import { ViewMode } from "gantt-task-react";
 
@@ -14,6 +12,9 @@ interface ViewSwitcherProps {
   onCollapseAll: () => void;
   undoDisabled: boolean;
   redoDisabled: boolean;
+  scrollLeft: () => void;
+  scrollRight: () => void;
+  onAddTask: () => void;
 }
 
 export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
@@ -27,46 +28,61 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
   onCollapseAll,
   undoDisabled,
   redoDisabled,
+  scrollLeft,
+  scrollRight,
+  onAddTask,
 }) => {
-  const getButtonClass = (viewMode: ViewMode) => {
-    return viewMode === currentViewMode ? "Button ActiveButton" : "Button";
+  const viewModes = [
+    ViewMode.Hour,
+    ViewMode.Day,
+    ViewMode.Week,
+    ViewMode.Month,
+    ViewMode.Year,
+  ];
+
+  const currentIndex = viewModes.indexOf(currentViewMode);
+
+  const handleZoomIn = () => {
+    if (currentIndex < viewModes.length - 1) {
+      onViewModeChange(viewModes[currentIndex + 1]);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (currentIndex > 0) {
+      onViewModeChange(viewModes[currentIndex - 1]);
+    }
   };
 
   return (
     <div className="ViewContainer">
-      {/* View Mode Buttons */}
-      <button
-        className={getButtonClass(ViewMode.Hour)}
-        onClick={() => onViewModeChange(ViewMode.Hour)}
-      >
-        Hour
+      <button className="Button" onClick={scrollLeft} aria-label="Scroll Left">
+        ←
       </button>
-      <button
-        className={getButtonClass(ViewMode.Day)}
-        onClick={() => onViewModeChange(ViewMode.Day)}
-      >
-        Day
-      </button>
-      <button
-        className={getButtonClass(ViewMode.Week)}
-        onClick={() => onViewModeChange(ViewMode.Week)}
-      >
-        Week
-      </button>
-      <button
-        className={getButtonClass(ViewMode.Month)}
-        onClick={() => onViewModeChange(ViewMode.Month)}
-      >
-        Month
-      </button>
-      <button
-        className={getButtonClass(ViewMode.Year)}
-        onClick={() => onViewModeChange(ViewMode.Year)}
-      >
-        Year
+      <button className="Button" onClick={scrollRight} aria-label="Scroll Right">
+        →
       </button>
 
-      {/* Undo and Redo Buttons */}
+      <button
+        className="Button"
+        onClick={handleZoomOut}
+        disabled={currentIndex <= 0}
+        aria-label="Zoom Out"
+      >
+        -
+      </button>
+
+      <span className="CurrentViewModeLabel mx-2">{currentViewMode}</span>
+
+      <button
+        className="Button"
+        onClick={handleZoomIn}
+        disabled={currentIndex >= viewModes.length - 1}
+        aria-label="Zoom In"
+      >
+        +
+      </button>
+
       <button className="Button" onClick={onUndo} disabled={undoDisabled}>
         Undo
       </button>
@@ -74,16 +90,14 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
         Redo
       </button>
 
-      {/* Expand All and Collapse All Buttons */}
       <button className="Button" onClick={onExpandAll}>
-        Expand All
+        ↓
       </button>
       <button className="Button" onClick={onCollapseAll}>
-        Collapse All
+        ↑
       </button>
 
-      {/* Toggle Task List */}
-      <label className="Switch">
+      <label className="Switch ml-4">
         <input
           type="checkbox"
           checked={isChecked}
@@ -91,6 +105,11 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
         />
         <span className="Slider" />
       </label>
+
+      {/* NEW: Add Task Button */}
+      <button className="Button ml-4" onClick={onAddTask}>
+        Add Task
+      </button>
     </div>
   );
 };

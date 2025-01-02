@@ -165,7 +165,7 @@ export function initTasks() {
 }
 
 export function getStartEndDateForProject(tasks: Task[], projectId: string) {
-  const projectTasks = tasks.filter(t => t.project === projectId);
+  const projectTasks = tasks.filter((t) => t.project === projectId);
 
   if (projectTasks.length === 0) {
     // No tasks in project, return current date for both start and end
