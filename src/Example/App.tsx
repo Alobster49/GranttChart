@@ -8,6 +8,12 @@ import { ViewSwitcher } from "./components/view-switcher";
 import "./index.css";
 import TaskModal from "./components/task-modal";
 
+
+// React DnD setup
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import TaskTable from "./components/task-table";
+
 const App = () => {
   const [view, setView] = useState<ViewMode>(ViewMode.Day);
   const [tasks, setTasks] = useState<Task[]>(initTasks());
@@ -89,7 +95,7 @@ const App = () => {
     }
   };
 
-  // New: We still keep handleEditTask for double-click events if needed
+  // New: handleEditTask for double-click events if needed
   const handleEditTask = (task: Task) => {
     setIsEditMode(true);
     setSelectedTask(task);
@@ -156,16 +162,13 @@ const App = () => {
     setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
   };
 
-  // Optional: still keep double-click if you want
+  // Optional: double-click
   const handleDblClick = (task: Task) => {
     console.log("Double clicked:", task.name);
-    // or you can open the edit here, too
-    // handleEditTask(task);
   };
 
-  // ---------- Updated handleClick to open Edit Modal ----------
+  // ---------- Click -> open Edit Modal ----------
   const handleClick = (task: Task) => {
-    // Instead of console.log, open edit modal right away:
     setIsEditMode(true);
     setSelectedTask(task);
     setShowModal(true);
@@ -197,10 +200,7 @@ const App = () => {
   };
 
   // ---------- Adjust Dependent Tasks ----------
-  const adjustDependentTasks = (
-    updatedTask: Task,
-    tasksArr: Task[]
-  ): Task[] => {
+  const adjustDependentTasks = (updatedTask: Task, tasksArr: Task[]): Task[] => {
     let newTasks = [...tasksArr];
     const dependentTasks = tasksArr.filter(
       (t) => t.dependencies && t.dependencies.includes(updatedTask.id)
@@ -228,62 +228,104 @@ const App = () => {
     return newTasks;
   };
 
+  // ---------- Reorder by drag-and-drop (from <TaskTable />) ----------
+  const handleReorder = (dragIndex: number, hoverIndex: number) => {
+    // We'll reorder the tasks array by swapping the displayOrder for tasks at dragIndex and hoverIndex
+    const sortedTasks = [...tasks].sort(
+      (a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)
+    );
+    const dragTask = sortedTasks[dragIndex];
+    const hoverTask = sortedTasks[hoverIndex];
+
+    if (!dragTask || !hoverTask) return;
+
+    pushToUndoStack(tasks);
+
+    // Swap displayOrder
+    const temp = dragTask.displayOrder;
+    dragTask.displayOrder = hoverTask.displayOrder;
+    hoverTask.displayOrder = temp;
+
+    // Re-sort
+    const newOrder = [...sortedTasks].sort(
+      (a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)
+    );
+    setTasks(newOrder);
+  };
+
   // ---------- Render ----------
   return (
-    <div className="Wrapper">
-      <ViewSwitcher
-        onViewModeChange={(viewMode) => setView(viewMode)}
-        onViewListChange={setIsChecked}
-        isChecked={isChecked}
-        currentViewMode={view}
-        onUndo={handleUndo}
-        onRedo={handleRedo}
-        onExpandAll={handleExpandAll}
-        onCollapseAll={handleCollapseAll}
-        undoDisabled={undoStack.length === 0}
-        redoDisabled={redoStack.length === 0}
-        scrollLeft={scrollLeft}
-        scrollRight={scrollRight}
-        onAddTask={handleAddTaskClick}
-      />
+    <DndProvider backend={HTML5Backend}>
+      <div className="Wrapper flex">
+        {/* Left side: our custom table */}
+        <div className="w-1/3 pr-4 ">
+          <TaskTable
+            tasks={tasks}
+            onReorder={handleReorder}
+            onClickEdit={(task) => {
+              setIsEditMode(true);
+              setSelectedTask(task);
+              setShowModal(true);
+            }}
+          />
+        </div>
 
-      <h3 className="text-6xl font-bold text-center my-4">T-nex Gantt Chart</h3>
+        {/* Right side: Gantt chart (disable built-in table by setting listCellWidth={0}) */}
+        <div ref={ganttRef} className="gantt-container overflow-x-auto w-2/3">
+          <ViewSwitcher
+            onViewModeChange={(viewMode) => setView(viewMode)}
+            onViewListChange={setIsChecked}
+            isChecked={isChecked}
+            currentViewMode={view}
+            onUndo={handleUndo}
+            onRedo={handleRedo}
+            onExpandAll={handleExpandAll}
+            onCollapseAll={handleCollapseAll}
+            undoDisabled={undoStack.length === 0}
+            redoDisabled={redoStack.length === 0}
+            scrollLeft={scrollLeft}
+            scrollRight={scrollRight}
+            onAddTask={handleAddTaskClick}
+          />
 
-      <div ref={ganttRef} className="gantt-container overflow-x-auto">
-        <Gantt
-          tasks={tasks}
-          viewMode={view}
-          onDateChange={handleTaskChange}
-          onDelete={handleTaskDelete}
-          onProgressChange={handleProgressChange}
-          onDoubleClick={handleDblClick}
-          onClick={handleClick}
-          onSelect={handleSelect}
-          onExpanderClick={handleExpanderClick}
-          listCellWidth={isChecked ? "180px" : ""}
-          columnWidth={columnWidth}
-        />
+          <h3 className="text-6xl font-bold text-center my-4">
+            T-nex Gantt Chart
+          </h3>
+
+          <Gantt
+            tasks={tasks}
+            viewMode={view}
+            onDateChange={handleTaskChange}
+            onDelete={handleTaskDelete}
+            onProgressChange={handleProgressChange}
+            onDoubleClick={handleDblClick}
+            onClick={handleClick}
+            onSelect={handleSelect}
+            onExpanderClick={handleExpanderClick}
+            listCellWidth={0}
+            columnWidth={columnWidth}
+          />
+        </div>
       </div>
 
       {/* Task Modal */}
       {showModal && (
         <TaskModal
-  isEditMode={isEditMode}
-  existingTask={selectedTask}
-  onClose={() => setShowModal(false)}
-  onSave={(task) => {
-    handleCreateOrUpdateTask(task);
-    setShowModal(false);
-  }}
-  onDelete={(task) => {
-    // Use the same logic you already have to delete the task
-    handleTaskDelete(task);
-    setShowModal(false);
-  }}
-  tasks={tasks}
-/>
+          isEditMode={isEditMode}
+          existingTask={selectedTask}
+          onClose={() => setShowModal(false)}
+          onSave={(task) => {
+            handleCreateOrUpdateTask(task);
+            setShowModal(false);
+          }}
+          onDelete={(task) => {
+            handleTaskDelete(task);
+            setShowModal(false);
+          }}
+          tasks={tasks}
+        />
       )}
-    </div>
+    </DndProvider>
   );
 };
 

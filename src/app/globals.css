@@ -3,21 +3,20 @@
 @tailwind utilities;
 
 @import '../Example/index.css'; 
+
 *,
-*::before
-*::after{
-box-sizing: border-box;
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
 body,
 #root,
-.app{
+.app {
   height: 100%;
   width: 100%;
   @apply text-lg;
   @apply bg-white;
   @apply text-black;
-  
 }
-

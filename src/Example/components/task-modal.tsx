@@ -6,7 +6,7 @@ interface TaskModalProps {
   existingTask: Task | null;
   onClose: () => void;
   onSave: (task: Task) => void;
-  onDelete: (task: Task) => void; // <-- NEW PROP
+  onDelete: (task: Task) => void;
   tasks: Task[];
 }
 
@@ -15,7 +15,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
   existingTask,
   onClose,
   onSave,
-  onDelete, // <-- NEW PROP
+  onDelete,
   tasks,
 }) => {
   const [name, setName] = useState("");

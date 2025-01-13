@@ -67,11 +67,11 @@
     border-radius: 50%;
   }
   input:checked + .Slider {
-    background-color: #757de8;
+    background-color: #208069;
   }
 
   input:focus + .Slider {
-    box-shadow: 0 0 1px #757de8;
+    box-shadow: 0 0 1px #208069;
   }
 
   input:checked + .Slider:before {

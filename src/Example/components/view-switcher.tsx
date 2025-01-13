@@ -55,7 +55,7 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
   };
 
   return (
-    <div className="ViewContainer">
+    <div className="ViewContainer mb-2">
       <button className="Button" onClick={scrollLeft} aria-label="Scroll Left">
         ←
       </button>
@@ -106,7 +106,6 @@ export const ViewSwitcher: React.FC<ViewSwitcherProps> = ({
         <span className="Slider" />
       </label>
 
-      {/* NEW: Add Task Button */}
       <button className="Button ml-4" onClick={onAddTask}>
         Add Task
       </button>
